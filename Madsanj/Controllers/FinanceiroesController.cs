@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using Data.ModelDb;
-using Data;
 using Business.Services;
+using Madsanj.Models.FormViewModel;
+using System.Collections.Generic;
 
 namespace Madsanj.Controllers
 {
@@ -48,15 +44,24 @@ namespace Madsanj.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nome,Descricao,Entrada,ValorTotal,DataRegistro")] Financeiro financeiro)
+        public async Task<IActionResult> Create(FinanceiroCreate financeiroCreate)
         {
-            if (ModelState.IsValid)
+            if (financeiroCreate.Existe && !financeiroCreate.Financeiro.TempoIndeterminado)
             {
-                if (await _financeiro.CrudAsync(financeiro, 0))
-                    return RedirectToAction(nameof(Index));
+                financeiroCreate.Financeiro.FinanceiroParcelas = new List<FinanceiroParcela>();
+                for (int i = 0; i < financeiroCreate.QuantidadeParcela; i++)
+                {
+                    financeiroCreate.Financeiro.FinanceiroParcelas.Add(new FinanceiroParcela()
+                    {
+                        DataVencimento = financeiroCreate.DataVencimento.AddMonths(i),
+                        ValorParcela = financeiroCreate.ValorParcela
+                    });
+                }
             }
 
-            return View(financeiro);
+            await _financeiro.CrudAsync(financeiroCreate.Financeiro, 0);
+
+            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Edit(int? id)

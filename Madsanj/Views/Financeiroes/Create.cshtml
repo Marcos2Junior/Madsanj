@@ -1,4 +1,4 @@
-﻿@model Data.ModelDb.Financeiro
+﻿@model Madsanj.Models.FormViewModel.FinanceiroCreate
 
 @{
     ViewData["Title"] = "Create";
@@ -8,34 +8,83 @@
 
 <h4>Financeiro</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<div class="jumbotron">
+    <div class="col-md-6 offset-md-3">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
+                <label asp-for="Financeiro.Nome" class="control-label"></label>
+                <input asp-for="Financeiro.Nome" class="form-control" placeholder="Nome da conta" />
+                <span asp-validation-for="Financeiro.Nome" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Descricao" class="control-label"></label>
-                <input asp-for="Descricao" class="form-control" />
-                <span asp-validation-for="Descricao" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Entrada" /> @Html.DisplayNameFor(model => model.Entrada)
-                </label>
+                <label asp-for="Financeiro.Descricao" class="control-label"></label>
+                <textarea asp-for="Financeiro.Descricao" class="form-control" rows="3" placeholder="Descrição da conta"></textarea>
+                <span asp-validation-for="Financeiro.Descricao" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ValorTotal" class="control-label"></label>
-                <input asp-for="ValorTotal" class="form-control" />
-                <span asp-validation-for="ValorTotal" class="text-danger"></span>
+                <div class="custom-control custom-switch">
+                    <input class="custom-control-input" asp-for="Financeiro.Entrada" id="check-entrada" />
+                    <label class="custom-control-label" for="check-entrada">@Html.DisplayNameFor(model => model.Financeiro.Entrada)</label>
+                </div>
             </div>
             <div class="form-group">
-                <label asp-for="DataRegistro" class="control-label"></label>
-                <input asp-for="DataRegistro" class="form-control" />
-                <span asp-validation-for="DataRegistro" class="text-danger"></span>
+                <label asp-for="Financeiro.ValorTotal" class="control-label"></label>
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">R$</span>
+                    </div>
+                    <input asp-for="Financeiro.ValorTotal" class="form-control" id="valor-total" value="0.00" />
+                    <span asp-validation-for="Financeiro.ValorTotal" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="custom-control custom-switch">
+                    <input type="checkbox" asp-for="Existe" class="custom-control-input" id="check-parcela" onclick="checkParcela()" />
+                    <label class="custom-control-label" for="check-parcela">@Html.DisplayNameFor(model => model.Existe)</label>
+                </div>
+            </div>
+
+            <div id="div-parcela" style="display:none">
+                <div class="form-group">
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" asp-for="Financeiro.TempoIndeterminado" onclick="checkTempoIndeterminado()" class="custom-control-input" id="check-tempind">
+                        <label class="custom-control-label" for="check-tempind">@Html.DisplayNameFor(model => model.Financeiro.TempoIndeterminado)</label>
+                    </div>
+                </div>
+
+                <div id="div-tempoIndeterminado" style="display:none">
+                    <div class="alert alert-dismissible alert-primary">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        <strong>Para que serve? </strong><br />
+                        Tempo indeterminado será gerado uma parcela automaticamente todo mês com data de vencimento definido abaixo.
+                        Essa função não tem prazo de validade, a menos que a conta seja desativada.
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group col">
+                        <label asp-for="QuantidadeParcela" class="control-label"></label>
+                        <input asp-for="QuantidadeParcela" id="quantidade-parcela" class="form-control" disabled="disabled"/>
+                        <span asp-validation-for="QuantidadeParcela" id="span-aviso1" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col">
+                        <label asp-for="ValorParcela" class="control-label"></label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">R$</span>
+                            </div>
+                            <input asp-for="ValorParcela" id="valor-parcela" class="form-control" disabled="disabled">
+                            <span asp-validation-for="ValorParcela" id="span-aviso2" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DataVencimento" class="control-label"></label>
+                    <input asp-for="DataVencimento" id="vencimento-parcela" class="form-control" disabled="disabled"/>
+                    <span asp-validation-for="DataVencimento" class="text-danger"></span>
+                </div>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -50,4 +99,54 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        var qntParc = document.getElementById('quantidade-parcela');
+        var valParc = document.getElementById('valor-parcela');
+        var vencParc = document.getElementById('vencimento-parcela');
+        var divTemp = document.getElementById('div-tempoIndeterminado');
+        var spanav1 = document.getElementById('span-aviso1');
+        var spanav2 = document.getElementById('span-aviso2');
+        var divParc = document.getElementById('div-parcela');
+
+        function checkParcela() {
+
+            if (document.getElementById('check-parcela').checked) {
+                divParc.style.display = 'block';
+                vencParc.value = '@DateTime.Now.AddMonths(1).ToString("yyyy-MM-dd")';
+                qntParc.value = 1;
+                valParc.value = '0.00';
+                vencParc.disabled = false;
+                qntParc.disabled = false;
+                valParc.disabled = false;
+            }
+            else {
+                divParc.style.display = 'none';
+                vencParc.disabled = true;
+                qntParc.disabled = true;
+                valParc.disabled = true;
+            }
+        }
+
+        function checkTempoIndeterminado() {
+
+            if (document.getElementById('check-tempind').checked) {
+                divTemp.style.display = 'block';
+                spanav1.style.display = 'none';
+                spanav2.style.display = 'none';
+                qntParc.disabled = true;
+                valParc.disabled = true;
+                qntParc.value = 0;
+                valParc.value = 0;
+            }
+            else {
+                divTemp.style.display = 'none';
+                spanav1.style.display = 'block';
+                spanav2.style.display = 'block';
+                qntParc.disabled = false;
+                valParc.disabled = false;
+            }
+        }
+    </script>
 }

@@ -26,7 +26,11 @@ namespace Data
             modelBuilder.Entity<FinanceiroParcela>()
                 .HasOne(x => x.Financeiro)
                 .WithMany(x => x.FinanceiroParcelas)
-                .HasForeignKey(x => x.FinanceiroId);      
+                .HasForeignKey(x => x.FinanceiroId);
+
+            modelBuilder.Entity<Financeiro>().Property(x => x.ValorTotal).HasColumnType("decimal(10, 2)");
+            modelBuilder.Entity<FinanceiroParcela>().Property(x => x.ValorParcela).HasColumnType("decimal(10, 2)");
+            modelBuilder.Entity<FinanceiroParcela>().Property(x => x.MultaAtraso).HasColumnType("decimal(10, 2)");
         }
     }
 }

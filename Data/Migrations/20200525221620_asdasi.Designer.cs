@@ -3,14 +3,16 @@ using System;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(MadsanjContext))]
-    partial class MadsanjContextModelSnapshot : ModelSnapshot
+    [Migration("20200525221620_asdasi")]
+    partial class asdasi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -73,9 +75,6 @@ namespace Data.Migrations
                         .HasColumnType("varchar(60) CHARACTER SET utf8mb4")
                         .HasMaxLength(60);
 
-                    b.Property<bool>("TempoIndeterminado")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<decimal>("ValorTotal")
                         .HasColumnType("decimal(10, 2)");
 
@@ -99,7 +98,7 @@ namespace Data.Migrations
                     b.Property<int>("FinanceiroId")
                         .HasColumnType("int");
 
-                    b.Property<decimal?>("MultaAtraso")
+                    b.Property<decimal>("MultaAtraso")
                         .HasColumnType("decimal(10, 2)");
 
                     b.Property<decimal>("ValorParcela")

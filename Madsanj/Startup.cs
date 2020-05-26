@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace Madsanj
 {
@@ -26,12 +28,21 @@ namespace Madsanj
                     options.UseMySql(Configuration.GetConnectionString("MadsanjContext"), builder =>
                     builder.MigrationsAssembly(nameof(Data))));
             services.AddScoped(typeof(FinanceiroService));
+            services.AddTransient<MadsanjContext>();
 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            var ptBr = new CultureInfo("PT-br");
+            var localizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new Microsoft.AspNetCore.Localization.RequestCulture(ptBr),
+                SupportedCultures = new List<CultureInfo> { ptBr },
+                SupportedUICultures = new List<CultureInfo> { ptBr }
+            };
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
