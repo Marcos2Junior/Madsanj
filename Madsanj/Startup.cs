@@ -28,8 +28,6 @@ namespace Madsanj
                     options.UseMySql(Configuration.GetConnectionString("MadsanjContext"), builder =>
                     builder.MigrationsAssembly(nameof(Data))));
             services.AddScoped(typeof(FinanceiroService));
-            services.AddTransient<MadsanjContext>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
