@@ -1,5 +1,6 @@
 ﻿using Data.Enum;
 using System;
+using System.Collections.Generic;
 
 namespace Data.ModelDb
 {
@@ -8,24 +9,24 @@ namespace Data.ModelDb
         public int Id { get; set; }
         public string Login { get; set; }
         public string Nome { get; set; }
-        public string Senha { get; set; }
         public DateTime Nascimento { get; set; }
         public Perfil Perfil { get; set; }
         public DateTime Cadastro { get; set; }
+        public List<Senha> Senhas { get; set; }
 
         public Usuario()
         {
         }
 
-        public Usuario(int id, string login, string nome, string senha, DateTime nascimento, Perfil perfil, DateTime cadastro)
+        public Usuario(int id, string login, string nome, DateTime nascimento, Perfil perfil, DateTime cadastro, List<Senha> senhas)
         {
             Id = id;
             Login = login;
             Nome = nome;
-            Senha = senha;
             Nascimento = nascimento;
             Perfil = perfil;
             Cadastro = cadastro;
+            Senhas = senhas;
         }
     }
 }

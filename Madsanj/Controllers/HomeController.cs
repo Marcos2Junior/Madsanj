@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Madsanj.Models;
+using Business.Classes.Criptografia;
+using Data;
+using Business;
 
 namespace Madsanj.Controllers
 {

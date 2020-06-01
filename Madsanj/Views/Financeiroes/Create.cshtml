@@ -1,16 +1,19 @@
 ﻿@model Madsanj.Models.FormViewModel.FinanceiroCreate
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastro de contas";
+    ViewData["Subtitle"] = "Financeiro";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Financeiro</h4>
+<h4>@ViewData["Subtitle"]</h4>
 <hr />
 <div class="jumbotron">
-    <div class="col-md-6 offset-md-3">
-        <form asp-action="Create">
+
+    <div class="col-md-8 offset-md-2">
+
+        <form asp-action="Create" class="table-bordered p-4">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Financeiro.Nome" class="control-label"></label>
@@ -28,14 +31,16 @@
                     <label class="custom-control-label" for="check-entrada">@Html.DisplayNameFor(model => model.Financeiro.Entrada)</label>
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Financeiro.ValorTotal" class="control-label"></label>
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">R$</span>
+            <div class="row">
+                <div class="form-group col-6">
+                    <label asp-for="Financeiro.ValorTotal" class="control-label"></label>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">R$</span>
+                        </div>
+                        <input asp-for="Financeiro.ValorTotal" class="form-control" id="valor-total" value="0.00" />
+                        <span asp-validation-for="Financeiro.ValorTotal" class="text-danger"></span>
                     </div>
-                    <input asp-for="Financeiro.ValorTotal" class="form-control" id="valor-total" value="0.00" />
-                    <span asp-validation-for="Financeiro.ValorTotal" class="text-danger"></span>
                 </div>
             </div>
 
@@ -66,7 +71,7 @@
                 <div class="row">
                     <div class="form-group col">
                         <label asp-for="QuantidadeParcela" class="control-label"></label>
-                        <input asp-for="QuantidadeParcela" id="quantidade-parcela" class="form-control" disabled="disabled"/>
+                        <input asp-for="QuantidadeParcela" id="quantidade-parcela" class="form-control" disabled="disabled" />
                         <span asp-validation-for="QuantidadeParcela" id="span-aviso1" class="text-danger"></span>
                     </div>
                     <div class="form-group col">
@@ -80,14 +85,17 @@
                         </div>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label asp-for="DataVencimento" class="control-label"></label>
-                    <input asp-for="DataVencimento" id="vencimento-parcela" class="form-control" disabled="disabled"/>
-                    <span asp-validation-for="DataVencimento" class="text-danger"></span>
+                <div class="row">
+
+                    <div class="form-group col-6">
+                        <label asp-for="DataVencimento" class="control-label"></label>
+                        <input asp-for="DataVencimento" id="vencimento-parcela" class="form-control" disabled="disabled" />
+                        <span asp-validation-for="DataVencimento" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <button type="submit" class="btn btn-outline-primary">Gravar</button>
             </div>
         </form>
     </div>
@@ -96,6 +104,8 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

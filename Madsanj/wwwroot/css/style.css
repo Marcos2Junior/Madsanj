@@ -1,0 +1,25 @@
+﻿body {
+    background-color: #000000;
+}
+
+
+
+.jumbotron li {
+    background-color: #000000;
+    color: #ffffff;
+    transition: 0.5s;
+}
+
+    .jumbotron li:hover {
+        background-color: darkgrey;
+        cursor: pointer;
+    }
+
+.jumbotron form {
+    background-color: #000000;
+    color:white;
+}
+
+.jumbotron button{
+    color:white;
+}
